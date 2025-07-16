@@ -6,11 +6,14 @@ import { NextRequest, NextResponse } from "next/server";
 // Optional fields in body: content
 
 export const POST = async (req: NextRequest) => {
-  const { team, date, timeDepart, timeReturn, distance } = await req.json();
+  const { team, vehicle, date, timeDepart, timeReturn, location, distance } =
+    await req.json();
 
   const result = await prisma.trip.create({
     data: {
-      teamId: "1",
+      teamId: team,
+      vehicleId: vehicle,
+      location,
       distance,
       departureTime: timeDepart,
       returnTime: timeReturn,

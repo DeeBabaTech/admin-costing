@@ -26,9 +26,11 @@ import { Separator } from "@/components/ui/separator";
 
 const InputData = () => {
   const [team, setTeam] = useState("");
+  const [vehicle, setVehicle] = useState("");
   const [date, setDate] = useState<Date | undefined>(undefined);
   const [timeDepart, setTimeDepart] = useState("");
   const [timeReturn, setTimeReturn] = useState("");
+  const [location, setLocation] = useState("");
   const [distance, setDistance] = useState<number>(0);
   const [open, setOpen] = useState(false);
 
@@ -37,7 +39,7 @@ const InputData = () => {
   const submitData = async (e: SyntheticEvent) => {
     e.preventDefault();
     try {
-      const body = { team, date, timeDepart, timeReturn, distance };
+      const body = { team, vehicle, date, timeDepart, timeReturn, location, distance };
       console.log(body);
       const res = await axios.post("/api/add-trip", body);
       console.log(res);
@@ -66,11 +68,30 @@ const InputData = () => {
               <SelectContent>
                 <SelectGroup>
                   <SelectLabel>Departments</SelectLabel>
-                  <SelectItem value='admin'>Admin Services</SelectItem>
-                  <SelectItem value='md-office'>MD's Office</SelectItem>
-                  <SelectItem value='operations'>Banking Operations</SelectItem>
-                  <SelectItem value='fincon'>Financial Control</SelectItem>
-                  <SelectItem value='legal'>Legal Services</SelectItem>
+                  <SelectItem value='1'>Admin Services</SelectItem>
+                  <SelectItem value='2'>MD's Office</SelectItem>
+                  <SelectItem value='3'>Banking Operations</SelectItem>
+                  <SelectItem value='4'>Financial Control</SelectItem>
+                  <SelectItem value='5'>Legal Services</SelectItem>
+                </SelectGroup>
+              </SelectContent>
+            </Select>
+          </div>
+
+          {/* Vehicle */}
+          <div className='space-y-2 w-[32%]'>
+            <Label htmlFor='team'>Vehicle Used</Label>
+            <Select onValueChange={setVehicle} value={vehicle}>
+              <SelectTrigger className='w-full bg-background'>
+                <SelectValue placeholder='Select a vehicle' />
+              </SelectTrigger>
+              <SelectContent>
+                <SelectGroup>
+                  <SelectLabel>Vehicles</SelectLabel>
+                  <SelectItem value='1'>GAC GA4 (AAA-640JB) </SelectItem>
+                  <SelectItem value='2'>GAC GA4 (AAA-643JB) </SelectItem>
+                  <SelectItem value='3'>GAC GA4 (AAA-69JA)</SelectItem>
+                  <SelectItem value='4'>GAC GA4 (BDG-747BP)</SelectItem>
                 </SelectGroup>
               </SelectContent>
             </Select>
@@ -142,16 +163,18 @@ const InputData = () => {
             />
           </div>
 
-          {/* Rate Per Litre */}
-          {/* <div className='space-y-2 w-[32%]'>
-            <Label htmlFor='rate'>Rate Per Litre</Label>
+          {/* Location */}
+          <div className='space-y-2 w-[32%]'>
+            <Label htmlFor='locations'>Trip Location(s)</Label>
             <Input
-              type='number'
-              id='rate'
-              placeholder='e.g., 250.00'
-              className='w-full'
+              type='text'
+              id='locations'
+              value={location}
+              onChange={(e) => setLocation(e.target.value)}
+              placeholder='e.g., Ikeja, Surulere'
+              className='w-full bg-background'
             />
-          </div> */}
+          </div>
         </div>
         <Separator className='my-4' />
 

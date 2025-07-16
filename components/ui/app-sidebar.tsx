@@ -4,6 +4,7 @@ import Image from "next/image";
 import {
   ChartNoAxesColumnIncreasing,
   FileInput,
+  Fuel,
   LayoutDashboard,
   LogOut,
   User2,
@@ -23,8 +24,7 @@ import {
   SidebarFooter,
 } from "@/components/ui/sidebar";
 import { logout } from "@/app/auth/actions";
-import { useParams, usePathname } from "next/navigation";
-import path from "path";
+import { usePathname } from "next/navigation";
 
 // Menu items.
 const items = [
@@ -34,9 +34,14 @@ const items = [
     icon: LayoutDashboard,
   },
   {
-    title: "Input Data",
-    url: "/input-data",
+    title: "Input Trip Info",
+    url: "/trip-info",
     icon: FileInput,
+  },
+  {
+    title: "Input Fuel Purchases",
+    url: "/fuel-purchases",
+    icon: Fuel,
   },
   {
     title: "Team Overview",
