@@ -43,13 +43,6 @@ export const columns: ColumnDef<Payment>[] = [
     ),
   },
   {
-    accessorKey: "cost",
-    header: () => <div className='text-center'>Trip Cost (NGN)</div>,
-    cell: (info) => (
-      <div className='text-center'>{info.getValue() as string}</div>
-    ),
-  },
-  {
     accessorKey: "distance",
     header: () => <div className='text-center'>Distance (KM)</div>,
     cell: (info) => (
@@ -59,6 +52,13 @@ export const columns: ColumnDef<Payment>[] = [
   {
     accessorKey: "average",
     header: () => <div className='text-center'>Average (KM/L)</div>,
+    cell: (info) => (
+      <div className='text-center'>{info.getValue() as string}</div>
+    ),
+  },
+  {
+    accessorKey: "cost",
+    header: () => <div className='text-center'>Trip Cost (NGN)</div>,
     cell: (info) => (
       <div className='text-center'>{info.getValue() as string}</div>
     ),

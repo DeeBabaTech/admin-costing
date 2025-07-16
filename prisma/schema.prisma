@@ -45,5 +45,16 @@ model Trip {
   distance        Int
   team            Team?     @relation(fields: [teamId], references: [id])
   teamId          String?
+  vehicle         Vehicle?   @relation(fields: [vehicleId], references: [id])
+  vehicleId       String?
+
   @@map(name: "trips")
 } 
+
+model Vehicle {
+  id              String    @default(cuid()) @id
+  name            String
+  trips           Trip[]
+
+  @@map(name: "vehicles")
+}
