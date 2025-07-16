@@ -1,0 +1,49 @@
+// schema.prisma
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url = env("POSTGRES_PRISMA_URL") // uses connection pooling
+  directUrl = env("POSTGRES_URL_NON_POOLING") // uses a direct connection
+}
+
+model Post {
+  id        String     @default(cuid()) @id
+  title     String
+  content   String?
+  published Boolean @default(false)
+  author    User?   @relation(fields: [authorId], references: [id])
+  authorId  String?
+}
+
+model User {
+  id            String       @default(cuid()) @id
+  name          String?
+  email         String?   @unique
+  createdAt     DateTime  @default(now()) @map(name: "created_at")
+  updatedAt     DateTime  @updatedAt @map(name: "updated_at")
+  posts         Post[]
+  @@map(name: "users")
+} 
+
+model Team {
+  id        String     @default(cuid()) @id
+  name      String
+  trips     Trip[]
+  @@map(name: "teams")
+}
+
+model Trip {
+  id              String       @default(cuid()) @id
+  location        String?
+  departureTime   String    @map(name: "departure_time")
+  returnTime      String    @map(name: "return_time")
+  date            DateTime
+  distance        Int
+  team            Team?     @relation(fields: [teamId], references: [id])
+  teamId          String?
+  @@map(name: "trips")
+} 
