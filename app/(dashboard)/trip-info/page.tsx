@@ -31,15 +31,25 @@ const InputData = () => {
   const [timeDepart, setTimeDepart] = useState("");
   const [timeReturn, setTimeReturn] = useState("");
   const [location, setLocation] = useState("");
-  const [distance, setDistance] = useState<number>(0);
+  const [mileageStart, setMileageStart] = useState<number>(0);
+  const [mileageEnd, setMileageEnd] = useState<number>(0);
   const [open, setOpen] = useState(false);
+  const distance = mileageEnd - mileageStart;
 
   const router = useRouter();
 
   const submitData = async (e: SyntheticEvent) => {
     e.preventDefault();
     try {
-      const body = { team, vehicle, date, timeDepart, timeReturn, location, distance };
+      const body = {
+        team,
+        vehicle,
+        date,
+        timeDepart,
+        timeReturn,
+        location,
+        distance,
+      };
       console.log(body);
       const res = await axios.post("/api/add-trip", body);
       console.log(res);
@@ -150,14 +160,27 @@ const InputData = () => {
             />
           </div>
 
-          {/* Distance Covered */}
+          {/* Mileage Start */}
           <div className='space-y-2 w-[32%]'>
-            <Label htmlFor='distance'>Distance Covered</Label>
+            <Label htmlFor='mileageStart'>Mileage Start</Label>
             <Input
               type='number'
-              id='distance'
-              value={distance}
-              onChange={(e) => setDistance(Number(e.target.value))}
+              id='mileageStart'
+              value={mileageStart}
+              onChange={(e) => setMileageStart(Number(e.target.value))}
+              placeholder='e.g., 25'
+              className='w-full bg-background'
+            />
+          </div>
+
+          {/* Mileage End */}
+          <div className='space-y-2 w-[32%]'>
+            <Label htmlFor='mileageEnd'>Mileage End</Label>
+            <Input
+              type='number'
+              id='mileageEnd'
+              value={mileageEnd}
+              onChange={(e) => setMileageEnd(Number(e.target.value))}
               placeholder='e.g., 25'
               className='w-full bg-background'
             />
@@ -182,7 +205,8 @@ const InputData = () => {
           Summary of Current Entries
         </h2>
         <div className='text-gray-600 text-sm'>
-          Estimated Total Cost: <span className='font-bold'>₦0.00</span>
+          Estimated Total Cost:{" "}
+          <span className='font-bold'>₦{distance > 0 && distance * 100}</span>
         </div>
 
         <div className='flex justify-end'>

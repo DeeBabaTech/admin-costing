@@ -25,13 +25,10 @@ import {
 import { Separator } from "@/components/ui/separator";
 
 const InputData = () => {
-  const [team, setTeam] = useState("");
   const [vehicle, setVehicle] = useState("");
   const [date, setDate] = useState<Date | undefined>(undefined);
-  const [timeDepart, setTimeDepart] = useState("");
-  const [timeReturn, setTimeReturn] = useState("");
-  const [location, setLocation] = useState("");
-  const [distance, setDistance] = useState<number>(0);
+  const [litreAmount, setLitreAmount] = useState<number>(0);
+  const [totalAmount, setTotalAmount] = useState<number>(0);
   const [open, setOpen] = useState(false);
 
   const router = useRouter();
@@ -40,13 +37,10 @@ const InputData = () => {
     e.preventDefault();
     try {
       const body = {
-        team,
         vehicle,
         date,
-        timeDepart,
-        timeReturn,
-        location,
-        distance,
+        litreAmount,
+        totalAmount,
       };
       console.log(body);
       const res = await axios.post("/api/add-trip", body);
@@ -66,29 +60,9 @@ const InputData = () => {
       </p>
       <form onSubmit={submitData} className=''>
         <div className='bg-accent/50 p-5 flex flex-wrap gap-[2%] space-y-3'>
-          {/* Team Name */}
-          <div className='space-y-2 w-[32%]'>
-            <Label htmlFor='team'>Team Name</Label>
-            <Select onValueChange={setTeam} value={team}>
-              <SelectTrigger className='w-full bg-background'>
-                <SelectValue placeholder='Select a team' />
-              </SelectTrigger>
-              <SelectContent>
-                <SelectGroup>
-                  <SelectLabel>Departments</SelectLabel>
-                  <SelectItem value='1'>Admin Services</SelectItem>
-                  <SelectItem value='2'>MD's Office</SelectItem>
-                  <SelectItem value='3'>Banking Operations</SelectItem>
-                  <SelectItem value='4'>Financial Control</SelectItem>
-                  <SelectItem value='5'>Legal Services</SelectItem>
-                </SelectGroup>
-              </SelectContent>
-            </Select>
-          </div>
-
           {/* Vehicle */}
           <div className='space-y-2 w-[32%]'>
-            <Label htmlFor='team'>Vehicle Used</Label>
+            <Label htmlFor='team'>Vehicle Name</Label>
             <Select onValueChange={setVehicle} value={vehicle}>
               <SelectTrigger className='w-full bg-background'>
                 <SelectValue placeholder='Select a vehicle' />
@@ -107,7 +81,7 @@ const InputData = () => {
 
           {/* Date */}
           <div className='space-y-2 w-[32%]'>
-            <Label htmlFor='date'>Trip Date</Label>
+            <Label htmlFor='date'>Date of purchase</Label>
             <Popover open={open} onOpenChange={setOpen}>
               <PopoverTrigger asChild>
                 <Button
@@ -134,52 +108,28 @@ const InputData = () => {
             </Popover>
           </div>
 
-          {/* Departure Time */}
+          {/* Amount Per Litre */}
           <div className='space-y-2 w-[32%]'>
-            <Label htmlFor='depart-time'>Departure Time</Label>
-            <Input
-              type='time'
-              id='depart-time'
-              onChange={(e) => setTimeDepart(e.target.value)}
-              value={timeDepart}
-              className='bg-background appearance-none [&::-webkit-calendar-picker-indicator]:hidden [&::-webkit-calendar-picker-indicator]:appearance-none'
-            />
-          </div>
-
-          {/* Return Time */}
-          <div className='space-y-2 w-[32%]'>
-            <Label htmlFor='return-time'>Return Time</Label>
-            <Input
-              type='time'
-              id='return-time'
-              onChange={(e) => setTimeReturn(e.target.value)}
-              value={timeReturn}
-              className='bg-background appearance-none [&::-webkit-calendar-picker-indicator]:hidden [&::-webkit-calendar-picker-indicator]:appearance-none'
-            />
-          </div>
-
-          {/* Distance Covered */}
-          <div className='space-y-2 w-[32%]'>
-            <Label htmlFor='distance'>Distance Covered</Label>
+            <Label htmlFor='distance'>Amount Per Litre</Label>
             <Input
               type='number'
               id='distance'
-              value={distance}
-              onChange={(e) => setDistance(Number(e.target.value))}
+              value={litreAmount}
+              onChange={(e) => setLitreAmount(Number(e.target.value))}
               placeholder='e.g., 25'
               className='w-full bg-background'
             />
           </div>
 
-          {/* Location */}
+          {/* Amount Purchased */}
           <div className='space-y-2 w-[32%]'>
-            <Label htmlFor='locations'>Trip Location(s)</Label>
+            <Label htmlFor='distance'>Total Amount Purchased</Label>
             <Input
-              type='text'
-              id='locations'
-              value={location}
-              onChange={(e) => setLocation(e.target.value)}
-              placeholder='e.g., Ikeja, Surulere'
+              type='number'
+              id='distance'
+              value={totalAmount}
+              onChange={(e) => setTotalAmount(Number(e.target.value))}
+              placeholder='e.g., 25'
               className='w-full bg-background'
             />
           </div>

@@ -37,72 +37,68 @@ export default function LoginPage() {
   };
 
   return (
-    <div className='flex justify-center mt-10'>
-      <Card className='w-full max-w-sm'>
-        <CardHeader>
-          <CardTitle>Sign up to open an account</CardTitle>
-          <CardDescription>
-            Enter your details below to sign up an account
-          </CardDescription>
-          <CardAction>
-            <Button variant='link'>
-              <a href='/auth/login'>Login</a>
-            </Button>
-          </CardAction>
-        </CardHeader>
-        <CardContent>
-          <form onSubmit={handleRegister}>
-            <div className='flex flex-col gap-6'>
-              <div className='grid gap-2 space-y-2'>
-                <Label htmlFor='name'>First Name</Label>
-                <Input
-                  id='name'
-                  type='name'
-                  placeholder='Enter your name'
-                  value={name}
-                  onChange={(e) => setName(e.target.value)}
-                  required
-                />
-                <Label htmlFor='email'>Email</Label>
-                <Input
-                  id='email'
-                  type='email'
-                  placeholder='Enter your email'
-                  value={email}
-                  onChange={(e) => setEmail(e.target.value)}
-                  required
-                />
-              </div>
-              <div className='grid gap-2'>
-                <div className='flex items-center'>
-                  <Label htmlFor='password'>Password</Label>
-                  <a
-                    href='#'
-                    className='ml-auto inline-block text-sm underline-offset-4 hover:underline'>
-                    Forgot your password?
-                  </a>
-                </div>
-                <Input
-                  id='password'
-                  type='password'
-                  placeholder='****'
-                  value={password}
-                  onChange={(e) => setPassword(e.target.value)}
-                  required
-                />
-              </div>
+    <Card className='w-full max-w-sm'>
+      <CardHeader>
+        <CardTitle>Sign up to open an account</CardTitle>
+        <CardDescription>
+          Enter your details below to sign up an account
+        </CardDescription>
+        <CardAction>
+          <Button variant='link'>
+            <a href='/auth/login'>Login</a>
+          </Button>
+        </CardAction>
+      </CardHeader>
+      <CardContent>
+        <form onSubmit={handleRegister}>
+          <div className='flex flex-col gap-6'>
+            <div className='grid gap-2'>
+              <Label htmlFor='name'>First Name</Label>
+              <Input
+                id='name'
+                type='name'
+                placeholder='Enter your name'
+                value={name}
+                onChange={(e) => setName(e.target.value)}
+                required
+              />
+              <Label htmlFor='email'>Email</Label>
+              <Input
+                id='email'
+                type='email'
+                placeholder='Enter your email'
+                value={email}
+                onChange={(e) => setEmail(e.target.value)}
+                required
+              />
+              {/* <div className='flex items-center'> */}
+              <Label htmlFor='password'>Password</Label>
+              {/* <a
+                  href='#'
+                  className='ml-auto inline-block text-sm underline-offset-4 hover:underline'>
+                  Forgot your password?
+                </a> */}
+              {/* </div> */}
+              <Input
+                id='password'
+                type='password'
+                placeholder='****'
+                value={password}
+                onChange={(e) => setPassword(e.target.value)}
+                required
+              />
             </div>
-            <Button type='submit' disabled={loading} className='w-full mt-5'>
-              {loading ? "Signing Up..." : "Sign Up"}
-            </Button>
-          </form>
-        </CardContent>
-        {/* <CardFooter className='flex-col gap-2'>
+          </div>
+          <Button type='submit' disabled={loading} className='w-full mt-5'>
+            {loading ? "Signing Up..." : "Sign Up"}
+          </Button>
+        </form>
+      </CardContent>
+      {/* <CardFooter className='flex-col gap-2'>
           <Button variant='outline' className='w-full'>
             Login with Google
           </Button>
         </CardFooter> */}
-      </Card>
-    </div>
+    </Card>
   );
 }
