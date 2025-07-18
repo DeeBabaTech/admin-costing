@@ -11,7 +11,7 @@ import {
   TrendingUp,
   Users,
 } from "lucide-react";
-import Overviews from "@/components/ui/overviews";
+import Overviews from "@/components/overviews";
 import { Separator } from "@/components/ui/separator";
 import { Button } from "@/components/ui/button";
 import { Calendar } from "@/components/ui/calendar";

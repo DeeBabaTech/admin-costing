@@ -19,16 +19,17 @@ model Team {
 
 model Trip {
   id              String     @default(cuid()) @id
-  location        String?
+  location        String
   departureTime   String     @map(name: "departure_time")
   returnTime      String     @map(name: "return_time")
   date            DateTime  
-  distance        Int
+  mileageStart    Int         @map(name: "mileage_start")
+  mileageEnd      Int         @map(name: "mileage_end")
   team            Team?      @relation(fields: [teamId], references: [id])
-  teamId          String?
+  teamId          String
   vehicle         Vehicle?   @relation(fields: [vehicleId], references: [id])
-  vehicleId       String?
-  entryBy         String?    @map(name: "entry_by")
+  vehicleId       String
+  entryBy         String    @map(name: "entry_by")
 
   @@map(name: "trips")
 } 
@@ -44,10 +45,11 @@ model Vehicle {
 
 model Fuel {
   id              String    @default(cuid()) @id
+  date            DateTime  
   amountPerLitre  Int       @map(name: "amount_per_litre")
   totalAmount     Int       @map(name: "total_amount")
-  vehicle         Vehicle?   @relation(fields: [vehicleId], references: [id])
-  vehicleId       String?
+  vehicle         Vehicle   @relation(fields: [vehicleId], references: [id])
+  vehicleId       String
 
   @@map(name: "fuel")
 }

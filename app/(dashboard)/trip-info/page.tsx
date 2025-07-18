@@ -14,7 +14,7 @@ import {
   SelectLabel,
   SelectItem,
 } from "@/components/ui/select";
-import { CalendarIcon, ChevronDownIcon } from "lucide-react";
+import { CalendarIcon } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Calendar } from "@/components/ui/calendar";
 import {
@@ -23,6 +23,7 @@ import {
   PopoverTrigger,
 } from "@/components/ui/popover";
 import { Separator } from "@/components/ui/separator";
+import { toast } from "sonner";
 
 const InputData = () => {
   const [team, setTeam] = useState("");
@@ -34,12 +35,21 @@ const InputData = () => {
   const [mileageStart, setMileageStart] = useState<number>(0);
   const [mileageEnd, setMileageEnd] = useState<number>(0);
   const [open, setOpen] = useState(false);
+  const [loading, setLoading] = useState(false);
   const distance = mileageEnd - mileageStart;
 
   const router = useRouter();
 
   const submitData = async (e: SyntheticEvent) => {
     e.preventDefault();
+
+    if (distance < 0) {
+      toast.info("Mileage Error", {
+        description: "Ensure that the mileage information is properly recorded",
+      });
+      return;
+    }
+
     try {
       const body = {
         team,
@@ -48,13 +58,29 @@ const InputData = () => {
         timeDepart,
         timeReturn,
         location,
-        distance,
+        mileageStart,
+        mileageEnd,
       };
-      console.log(body);
+
+      setLoading(true);
       const res = await axios.post("/api/add-trip", body);
-      console.log(res);
-    } catch (error) {
-      console.error("Post submission failed:", error);
+
+      if (res.status === 201) {
+        toast.success("Trip Info Added");
+      }
+    } catch (error: any) {
+      console.error(
+        "Submission failed:",
+        error?.response
+      );
+      const errors = error?.response?.data?.error?.properties;
+      if (errors) {
+        const firstField = Object.keys(errors)[0];
+        const firstError = errors[firstField].errors[0];
+        toast.error(firstError);
+      }
+    } finally {
+      setLoading(false);
     }
   };
 
@@ -210,7 +236,9 @@ const InputData = () => {
         </div>
 
         <div className='flex justify-end'>
-          <Button>Submit</Button>
+          <Button disabled={loading}>
+            {loading ? "Submitting" : "Submit"}
+          </Button>
         </div>
       </form>
     </main>

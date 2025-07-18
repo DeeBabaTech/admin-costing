@@ -14,6 +14,7 @@ import {
 import { Button } from "@/components/ui/button";
 import { Label } from "@/components/ui/label";
 import { Input } from "@/components/ui/input";
+import { toast } from "sonner";
 
 export default function LoginPage() {
   const [name, setName] = useState("");
@@ -29,6 +30,10 @@ export default function LoginPage() {
       if (res.error) {
         alert(res.error.message);
         setLoading(false);
+      } else {
+        toast.success("User Registered Successfully", {
+          description: "Check your email for verification",
+        });
       }
     } catch (error) {
       console.error("Login error:", error);

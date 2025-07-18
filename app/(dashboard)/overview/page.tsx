@@ -9,8 +9,8 @@ import {
   Users,
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
-import Overviews from "@/components/ui/overviews";
-import { DataTable } from "@/components/ui/data-table";
+import Overviews from "@/components/overviews";
+import { DataTable } from "@/components/data-table";
 import { columns } from "./columns";
 import { Input } from "@/components/ui/input";
 
@@ -80,7 +80,6 @@ export default async function Home() {
       </ul>
 
       <div className='container'>
-        
         <DataTable columns={columns} data={data} />
       </div>
     </main>

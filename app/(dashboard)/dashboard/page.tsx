@@ -1,6 +1,4 @@
-import prisma from "@/lib/prisma";
 import Link from "next/link";
-import { logout } from "../../auth/actions";
 import { PlusCircle } from "lucide-react";
 import { Button } from "@/components/ui/button";
 

@@ -25,6 +25,7 @@ import {
 } from "@/components/ui/sidebar";
 import { logout } from "@/app/auth/actions";
 import { usePathname } from "next/navigation";
+import useGetUser from "./hooks/get-user";
 
 // Menu items.
 const items = [
@@ -55,8 +56,9 @@ const items = [
   },
 ];
 
-export function AppSidebar() {
+export function AppSidebar({ user }: { user: any }) {
   const pathname = usePathname();
+
   return (
     <>
       <Sidebar collapsible='icon'>
@@ -100,7 +102,7 @@ export function AppSidebar() {
           <SidebarMenu>
             <SidebarMenuItem>
               <SidebarMenuButton variant='danger'>
-                <User2 /> Oladayo
+                <User2 /> {user.name}
                 <LogOut onClick={logout} className='ml-auto' />
               </SidebarMenuButton>
             </SidebarMenuItem>

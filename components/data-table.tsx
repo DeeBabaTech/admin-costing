@@ -20,9 +20,9 @@ import {
   TableHeader,
   TableRow,
 } from "@/components/ui/table";
-import { Input } from "./input";
+import { Input } from "./ui/input";
 import { useState } from "react";
-import { DataTablePagination } from "./pagination";
+import { DataTablePagination } from "./ui/pagination";
 
 interface DataTableProps<TData, TValue> {
   columns: ColumnDef<TData, TValue>[];

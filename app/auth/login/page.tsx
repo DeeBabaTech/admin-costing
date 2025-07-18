@@ -7,13 +7,13 @@ import {
   CardAction,
   CardContent,
   CardDescription,
-  CardFooter,
   CardHeader,
   CardTitle,
 } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Label } from "@/components/ui/label";
 import { Input } from "@/components/ui/input";
+import { toast } from "sonner";
 
 export default function LoginPage() {
   const [email, setEmail] = useState("");
@@ -25,8 +25,11 @@ export default function LoginPage() {
     try {
       setLoading(true);
       const res = await login({ email, password });
-      if (res.error) {
-        alert(res.error.message);
+      console.log(res);
+      if (res.data.user) {
+        toast.success("Login Success");
+      } else {
+        toast.error(res.error.message);
         setLoading(false);
       }
     } catch (error) {

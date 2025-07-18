@@ -1,6 +1,6 @@
 "use client";
 
-import { SyntheticEvent, useState } from "react";
+import { SyntheticEvent, use, useState } from "react";
 import { useRouter } from "next/navigation";
 import axios from "axios";
 import { Input } from "@/components/ui/input";
@@ -23,6 +23,7 @@ import {
   PopoverTrigger,
 } from "@/components/ui/popover";
 import { Separator } from "@/components/ui/separator";
+import { toast } from "sonner";
 
 const InputData = () => {
   const [vehicle, setVehicle] = useState("");
@@ -30,8 +31,7 @@ const InputData = () => {
   const [litreAmount, setLitreAmount] = useState<number>(0);
   const [totalAmount, setTotalAmount] = useState<number>(0);
   const [open, setOpen] = useState(false);
-
-  const router = useRouter();
+  const [loading, setLoading] = useState(false);
 
   const submitData = async (e: SyntheticEvent) => {
     e.preventDefault();
@@ -42,21 +42,33 @@ const InputData = () => {
         litreAmount,
         totalAmount,
       };
-      console.log(body);
-      const res = await axios.post("/api/add-trip", body);
-      console.log(res);
-    } catch (error) {
-      console.error("Post submission failed:", error);
+
+      setLoading(true);
+      const res = await axios.post("/api/add-fuel-purchase", body);
+
+      if (res.status === 201) {
+        toast.success("Fuel Purchase Recorded Successfully");
+      }
+    } catch (error: any) {
+      console.error("Submission failed:", error?.response);
+      const errors = error?.response?.data?.error?.properties;
+      if (errors) {
+        const firstField = Object.keys(errors)[0];
+        const firstError = errors[firstField].errors[0];
+        toast.error(firstError);
+      }
+    } finally {
+      setLoading(false);
     }
   };
 
   return (
     <main className='m-4'>
       <h1 className='text-3xl font-bold mb-2 text-hover-primary'>
-        Record Trip Details
+        Record Fuel Purchases
       </h1>
       <p className='mb-4 text-gray-600'>
-        Enter detailed information on a trip embarked by your team.
+        Enter detailed information on the fuel purchased by a vehicle.
       </p>
       <form onSubmit={submitData} className=''>
         <div className='bg-accent/50 p-5 flex flex-wrap gap-[2%] space-y-3'>
@@ -144,7 +156,9 @@ const InputData = () => {
         </div>
 
         <div className='flex justify-end'>
-          <Button>Submit</Button>
+          <Button disabled={loading}>
+            {loading ? "Submitting" : "Submit"}
+          </Button>
         </div>
       </form>
     </main>
