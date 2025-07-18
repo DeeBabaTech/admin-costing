@@ -13,55 +13,53 @@ import {
 
 // This type is used to define the shape of our data.
 // You can use a Zod schema here if you want.
-export type Payment = {
+export type Trips = {
   id: string;
-  team: string;
-  fuel: number;
-  cost: number;
-  distance: number;
-  average: number;
-  date: string;
+  date: Date;
+  location: string;
+  mileageStart: number;
+  mileageEnd: number;
+  team: {
+    id: string;
+    name: string;
+  } | null;
 };
 
-export const columns: ColumnDef<Payment>[] = [
+export const columns: ColumnDef<Trips>[] = [
   {
     accessorKey: "id",
     header: () => <div className='text-center'>S/N</div>,
-    cell: (info) => (
-      <div className='text-center'>{info.getValue() as string}</div>
-    ),
+    cell: ({ row }) => <div className='text-center'>{row.index + 1}</div>,
   },
   {
     accessorKey: "team",
     header: "Team Name",
+    cell: ({ row }) => {
+      const { team } = row.original;
+      return <div>{team?.name}</div>;
+    },
+    accessorFn: (row) => row.team?.name ?? "",
+    filterFn: "includesString",
   },
   {
-    accessorKey: "fuel",
-    header: () => <div className='text-center'>Fuel Used (L)</div>,
+    accessorKey: "location",
+    header: () => <div className='text-center'>Location</div>,
     cell: (info) => (
       <div className='text-center'>{info.getValue() as string}</div>
     ),
   },
   {
     accessorKey: "distance",
-    header: () => <div className='text-center'>Distance (KM)</div>,
-    cell: (info) => (
-      <div className='text-center'>{info.getValue() as string}</div>
-    ),
-  },
-  {
-    accessorKey: "average",
-    header: () => <div className='text-center'>Average (KM/L)</div>,
-    cell: (info) => (
-      <div className='text-center'>{info.getValue() as string}</div>
-    ),
+    header: () => <div className='text-center'>Distance</div>,
+    cell: ({ row }) => {
+      const { mileageStart, mileageEnd } = row.original;
+      return <div className='text-center'>{mileageEnd - mileageStart} KM</div>;
+    },
   },
   {
     accessorKey: "cost",
-    header: () => <div className='text-center'>Trip Cost (NGN)</div>,
-    cell: (info) => (
-      <div className='text-center'>{info.getValue() as string}</div>
-    ),
+    header: () => <div className='text-center'>Estimated Cost </div>,
+    cell: (info) => <div className='text-center'>In Progress</div>,
   },
   {
     accessorKey: "date",
@@ -74,9 +72,10 @@ export const columns: ColumnDef<Payment>[] = [
         </Button>
       </div>
     ),
-    cell: (info) => (
-      <div className='text-center'>{info.getValue() as string}</div>
-    ),
+    cell: (info) => {
+      const date = new Date(info.getValue() as string);
+      return <div className='text-center'>{date.toLocaleDateString()}</div>;
+    },
   },
 
   {

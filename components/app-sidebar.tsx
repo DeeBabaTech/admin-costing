@@ -30,9 +30,9 @@ import useGetUser from "./hooks/get-user";
 // Menu items.
 const items = [
   {
-    title: "Dashboard",
-    url: "/dashboard",
-    icon: LayoutDashboard,
+    title: "Team Overview",
+    url: "/overview",
+    icon: Users,
   },
   {
     title: "Input Trip Info",
@@ -43,11 +43,6 @@ const items = [
     title: "Input Fuel Purchases",
     url: "/fuel-purchases",
     icon: Fuel,
-  },
-  {
-    title: "Team Overview",
-    url: "/overview",
-    icon: Users,
   },
   {
     title: "Cost Analysis",

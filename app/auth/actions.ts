@@ -23,8 +23,8 @@ export async function login({
     return { error, data };
   }
 
-  revalidatePath("/dashboard", "layout");
-  redirect("/dashboard");
+  revalidatePath("/overview", "layout");
+  redirect("/overview");
 }
 
 export async function signup({

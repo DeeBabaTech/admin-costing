@@ -1,7 +1,7 @@
 "use client";
 
 import { SyntheticEvent, useState } from "react";
-import { useRouter } from "next/navigation";
+import { redirect, useRouter } from "next/navigation";
 import axios from "axios";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
@@ -67,12 +67,10 @@ const InputData = () => {
 
       if (res.status === 201) {
         toast.success("Trip Info Added");
+        router.push("/overview");
       }
     } catch (error: any) {
-      console.error(
-        "Submission failed:",
-        error?.response
-      );
+      console.error("Submission failed:", error?.response);
       const errors = error?.response?.data?.error?.properties;
       if (errors) {
         const firstField = Object.keys(errors)[0];
