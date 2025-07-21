@@ -31,6 +31,11 @@ import {
   PopoverContent,
   PopoverTrigger,
 } from "@/components/ui/popover";
+import { BarChart, Charts } from "@/components/charts";
+import { set } from "zod";
+import { tr } from "zod/v4/locales";
+import axios from "axios";
+import { toast } from "sonner";
 
 const cards = [
   {
@@ -54,20 +59,35 @@ const cards = [
 ];
 
 export default function Home() {
-  // const posts = await prisma.post.findMany({
-  //   include: { author: true },
-  //   orderBy: { id: "desc" },
-  // });
   const [team, setTeam] = useState("all");
   const [from, setFrom] = useState<Date | undefined>(undefined);
   const [to, setTo] = useState<Date | undefined>(undefined);
   const [openTo, setOpenTo] = useState(false);
   const [openFrom, setOpenFrom] = useState(false);
 
-  const handleSubmit = (e: FormEvent) => {
+  const [trips, setTrips] = useState<any[]>([]);
+
+  const handleSubmit = async (e: FormEvent) => {
     e.preventDefault();
-    console.log({ team, from, to });
+    if (!from || !to) {
+      return toast.error("Please select both start and end dates.");
+    }
+    try {
+      const res = await axios.get("/api/fetch-trips", {
+        params: {
+          from,
+          to,
+          team,
+        },
+      });
+
+      setTrips(res.data);
+    } catch (error) {
+      console.log(error);
+    }
   };
+
+  console.log("Trips Data:", trips);
 
   return (
     <main className=''>
@@ -139,9 +159,9 @@ export default function Home() {
               <SelectGroup>
                 <SelectItem value='all'>All Teams</SelectItem>
                 <SelectItem value='admin'>Admin Services</SelectItem>
-                <SelectItem value='md-office'>MD's Office</SelectItem>
-                <SelectItem value='operations'>Banking Operations</SelectItem>
-                <SelectItem value='fincon'>Financial Control</SelectItem>
+                <SelectItem value='md'>MD's Office</SelectItem>
+                <SelectItem value='Operations'>Banking Operations</SelectItem>
+                <SelectItem value='financial'>Financial Control</SelectItem>
                 <SelectItem value='legal'>Legal Services</SelectItem>
               </SelectGroup>
             </SelectContent>
@@ -162,6 +182,20 @@ export default function Home() {
           );
         })}
       </ul>
+      <div className='flex justify-between gap-3 items-'>
+        <div className='w-2/5 border rounded-md border-hover-primary p-4 mb-6'>
+          <h2 className='text-xl font-semibold text-hover-primary mb-4'>
+            Fuel Costs by Team
+          </h2>
+          <Charts />
+        </div>
+        <div className='w-4/5 border rounded-md border-hover-primary p-4 mb-6'>
+          <h2 className='text-xl font-semibold text-hover-primary mb-4'>
+            Fuel Costs by Team
+          </h2>
+          <BarChart />
+        </div>
+      </div>
     </main>
   );
 }
