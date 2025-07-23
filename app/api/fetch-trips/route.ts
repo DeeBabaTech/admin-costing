@@ -7,25 +7,27 @@ import { NextRequest, NextResponse } from "next/server";
 
 export const GET = async (req: NextRequest) => {
   try {
-    const from = req.nextUrl.searchParams.get("from") || "";
-    const to = req.nextUrl.searchParams.get("to") || "";
+    const start = req.nextUrl.searchParams.get("start") || "";
+    const end = req.nextUrl.searchParams.get("end") || "";
     const team = req.nextUrl.searchParams.get("team") || "all";
 
-    const result = await prisma.trip.findMany({
+    const result = await prisma.team.findMany({
       where: {
-        date: {
-          gte: new Date(from),
-          lte: new Date(to),
-        },
-        team: {
-          name: {
-            contains: team === "all" ? undefined : team,
-            mode: "insensitive",
+        trips: {
+          some: {
+            date: {
+              gte: new Date(start),
+              lte: new Date(end),
+            },
           },
+        },
+        name: {
+          contains: team === "all" ? undefined : team,
+          mode: "insensitive",
         },
       },
       include: {
-        team: true,
+        trips: true,
       },
     });
 

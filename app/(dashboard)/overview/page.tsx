@@ -12,26 +12,42 @@ import { Button } from "@/components/ui/button";
 import Overviews from "@/components/overviews";
 import { DataTable } from "@/components/data-table";
 import { columns } from "./columns";
-import { Input } from "@/components/ui/input";
 import { currencyFormat, distanceFormat } from "@/components/formats";
+import { thirtyDaysAgo, today } from "./date";
 
 export default async function Home() {
-  const totalTeams = await prisma.team.count();
-
   const trips = await prisma.trip.findMany({
     include: { team: true },
     orderBy: { date: "desc" },
+    where: {
+      date: {
+        gte: thirtyDaysAgo,
+        lte: today,
+      },
+    },
   });
+
+  const totalTeams = await prisma.team.count();
 
   const fuel = await prisma.fuel.aggregate({
     _sum: { totalAmount: true },
+    where: {
+      date: {
+        gte: thirtyDaysAgo,
+        lte: today,
+      },
+    },
   });
+
   const fuelPurchases = currencyFormat(fuel._sum.totalAmount || 0);
 
   const mileages = await prisma.trip.aggregate({
     _sum: { mileageEnd: true, mileageStart: true },
   });
+
   const totalDistance = distanceFormat(mileages);
+
+  console.log(trips)
 
   return (
     <main className=''>

@@ -31,11 +31,12 @@ import {
   PopoverContent,
   PopoverTrigger,
 } from "@/components/ui/popover";
-import { BarChart, Charts } from "@/components/charts";
+import { BarChart, getDoughnut, options } from "@/components/charts";
 import { set } from "zod";
 import { tr } from "zod/v4/locales";
 import axios from "axios";
 import { toast } from "sonner";
+import { Doughnut } from "react-chartjs-2";
 
 const cards = [
   {
@@ -54,14 +55,14 @@ const cards = [
     id: "3",
     title: "Projected Monthly Savings",
     value: "500",
-    info: "Target Achieved Based on current trends",
+    info: "Target Achieved Based on current trtos",
   },
 ];
 
 export default function Home() {
   const [team, setTeam] = useState("all");
-  const [from, setFrom] = useState<Date | undefined>(undefined);
-  const [to, setTo] = useState<Date | undefined>(undefined);
+  const [start, setStart] = useState<Date | undefined>(undefined);
+  const [end, setEnd] = useState<Date | undefined>(undefined);
   const [openTo, setOpenTo] = useState(false);
   const [openFrom, setOpenFrom] = useState(false);
 
@@ -69,14 +70,14 @@ export default function Home() {
 
   const handleSubmit = async (e: FormEvent) => {
     e.preventDefault();
-    if (!from || !to) {
+    if (!start || !end) {
       return toast.error("Please select both start and end dates.");
     }
     try {
       const res = await axios.get("/api/fetch-trips", {
         params: {
-          from,
-          to,
+          start,
+          end,
           team,
         },
       });
@@ -89,6 +90,8 @@ export default function Home() {
 
   console.log("Trips Data:", trips);
 
+  const doughnutData = getDoughnut(trips);
+
   return (
     <main className=''>
       <h1 className='text-3xl font-bold mb-4 text-hover-primary'>
@@ -99,14 +102,14 @@ export default function Home() {
         <CalendarDays className='text-hover-primary' />
 
         <div className='flex items-center gap-3'>
-          <Label htmlFor='from'>Date Range:</Label>
+          <Label htmlFor='start'>Date Range:</Label>
           <Popover open={openFrom} onOpenChange={setOpenFrom}>
             <PopoverTrigger asChild>
               <Button
                 variant='outline'
-                id='from'
+                id='start'
                 className='w-36 justify-between font-normal text-gray-500'>
-                {from ? from.toLocaleDateString() : "Start date"}
+                {start ? start.toLocaleDateString() : "Start date"}
                 <CalendarIcon />
               </Button>
             </PopoverTrigger>
@@ -115,10 +118,10 @@ export default function Home() {
               align='start'>
               <Calendar
                 mode='single'
-                selected={from}
+                selected={start}
                 captionLayout='dropdown'
-                onSelect={(from) => {
-                  setFrom(from);
+                onSelect={(start) => {
+                  setStart(start);
                   setOpenFrom(false);
                 }}
               />
@@ -128,9 +131,9 @@ export default function Home() {
             <PopoverTrigger asChild>
               <Button
                 variant='outline'
-                id='to'
+                id='end'
                 className='w-36 justify-between font-normal text-gray-500'>
-                {to ? to.toLocaleDateString() : "End date"}
+                {end ? end.toLocaleDateString() : "End date"}
                 <CalendarIcon />
               </Button>
             </PopoverTrigger>
@@ -139,10 +142,10 @@ export default function Home() {
               align='start'>
               <Calendar
                 mode='single'
-                selected={to}
+                selected={end}
                 captionLayout='dropdown'
-                onSelect={(to) => {
-                  setTo(to);
+                onSelect={(end) => {
+                  setEnd(end);
                   setOpenTo(false);
                 }}
               />
@@ -182,20 +185,17 @@ export default function Home() {
           );
         })}
       </ul>
-      <div className='flex justify-between gap-3 items-'>
-        <div className='w-2/5 border rounded-md border-hover-primary p-4 mb-6'>
-          <h2 className='text-xl font-semibold text-hover-primary mb-4'>
-            Fuel Costs by Team
-          </h2>
-          <Charts />
-        </div>
-        <div className='w-4/5 border rounded-md border-hover-primary p-4 mb-6'>
+      {/* <div className='flex justify-between gap-3 items-'> */}
+      <div className='w-1/2 border rounded-md border-hover-primary p-2 mb-6'>
+        <Doughnut data={doughnutData} options={options} />
+      </div>
+      {/* <div className='w-4/5 border rounded-md border-hover-primary p-4 mb-6'>
           <h2 className='text-xl font-semibold text-hover-primary mb-4'>
             Fuel Costs by Team
           </h2>
           <BarChart />
-        </div>
-      </div>
+        </div> */}
+      {/* </div> */}
     </main>
   );
 }

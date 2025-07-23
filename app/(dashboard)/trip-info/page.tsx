@@ -1,7 +1,7 @@
 "use client";
 
-import { SyntheticEvent, useState } from "react";
-import { redirect, useRouter } from "next/navigation";
+import { SyntheticEvent, useEffect, useState } from "react";
+import { useRouter } from "next/navigation";
 import axios from "axios";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
@@ -36,9 +36,21 @@ const InputData = () => {
   const [mileageEnd, setMileageEnd] = useState<number>(0);
   const [open, setOpen] = useState(false);
   const [loading, setLoading] = useState(false);
+  const [litreCost, setLitreCost] = useState(915);
   const distance = mileageEnd - mileageStart;
 
   const router = useRouter();
+
+  const DISTANCE_COVERABLE = vehicle === "4" ? 1000 : 700;
+  const TANK_CAPACITY = vehicle === "4" ? 80 : 50;
+  const COST_PER_KM = TANK_CAPACITY / DISTANCE_COVERABLE;
+
+  useEffect(() => {
+    if (typeof window !== "undefined") {
+      const storedPrice = localStorage.getItem("fuelPrice");
+      setLitreCost(storedPrice ? Number(storedPrice) : 915);
+    }
+  }, []);
 
   const submitData = async (e: SyntheticEvent) => {
     e.preventDefault();
@@ -60,9 +72,11 @@ const InputData = () => {
         location,
         mileageStart,
         mileageEnd,
+        estimatedCost: distance * litreCost * COST_PER_KM,
       };
 
       setLoading(true);
+      console.log(body)
       const res = await axios.post("/api/add-trip", body);
 
       if (res.status === 201) {
@@ -229,8 +243,10 @@ const InputData = () => {
           Summary of Current Entries
         </h2>
         <div className='text-gray-600 text-sm'>
-          Estimated Total Cost:{" "}
-          <span className='font-bold'>₦{distance > 0 && distance * 100}</span>
+          Estimated Total Cost:
+          <span className='font-bold'>
+            ₦{Math.round(distance * litreCost * COST_PER_KM * 100) / 100}
+          </span>
         </div>
 
         <div className='flex justify-end'>

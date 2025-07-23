@@ -33,6 +33,7 @@ export const POST = async (req: NextRequest) => {
         departureTime: data.timeDepart,
         returnTime: data.timeReturn,
         date: data.date,
+        estimatedCost: json.estimatedCost,
         entryBy: user?.name,
       },
     });

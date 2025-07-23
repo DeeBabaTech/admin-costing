@@ -10,6 +10,7 @@ import {
   DropdownMenuItem,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
+import { currencyFormat } from "@/components/formats";
 
 // This type is used to define the shape of our data.
 // You can use a Zod schema here if you want.
@@ -19,6 +20,7 @@ export type Trips = {
   location: string;
   mileageStart: number;
   mileageEnd: number;
+  estimatedCost: number;
   team: {
     id: string;
     name: string;
@@ -57,9 +59,12 @@ export const columns: ColumnDef<Trips>[] = [
     },
   },
   {
-    accessorKey: "cost",
+    accessorKey: "estimatedCost",
     header: () => <div className='text-center'>Estimated Cost </div>,
-    cell: (info) => <div className='text-center'>In Progress</div>,
+    cell: ({ row }) => {
+      const cost = currencyFormat(row.original.estimatedCost);
+      return <div className='text-center font-semibold'>{cost.toString()}</div>;
+    },
   },
   {
     accessorKey: "date",

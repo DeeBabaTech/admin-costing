@@ -25,6 +25,7 @@ model Trip {
   date            DateTime  
   mileageStart    Int         @map(name: "mileage_start")
   mileageEnd      Int         @map(name: "mileage_end")
+  estimatedCost   Int         @map(name: "estimated_cost")
   team            Team?      @relation(fields: [teamId], references: [id])
   teamId          String
   vehicle         Vehicle?   @relation(fields: [vehicleId], references: [id])
