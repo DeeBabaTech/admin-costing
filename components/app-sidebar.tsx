@@ -96,9 +96,9 @@ export function AppSidebar({ user }: { user: any }) {
         <SidebarFooter>
           <SidebarMenu>
             <SidebarMenuItem>
-              <SidebarMenuButton variant='danger'>
+              <SidebarMenuButton variant='danger' onClick={logout}>
                 <User2 /> {user.name}
-                <LogOut onClick={logout} className='ml-auto' />
+                <LogOut className='ml-auto' />
               </SidebarMenuButton>
             </SidebarMenuItem>
           </SidebarMenu>
