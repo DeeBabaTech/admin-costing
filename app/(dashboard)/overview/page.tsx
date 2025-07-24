@@ -1,5 +1,4 @@
 import prisma from "@/lib/prisma";
-import Link from "next/link";
 import {
   Banknote,
   Fuel,
@@ -43,18 +42,22 @@ export default async function Home() {
 
   const mileages = await prisma.trip.aggregate({
     _sum: { mileageEnd: true, mileageStart: true },
+    where: {
+      date: {
+        gte: thirtyDaysAgo,
+        lte: today,
+      },
+    },
   });
 
   const totalDistance = distanceFormat(mileages);
-
-  console.log(trips)
 
   return (
     <main className=''>
       <h1 className='text-3xl font-bold mb-4 text-hover-primary'>
         Team Overview
       </h1>
-      <ul className='flex flex-wrap justify- mb-5 gap-4'>
+      <ul className='flex flex-wrap gap-4'>
         <Overviews
           title='Total Teams'
           value={totalTeams}
@@ -73,15 +76,13 @@ export default async function Home() {
           info='Total fuel consumed across all teams'
           Icon={<Fuel />}
         />
-        {/* <Overviews
-          title='Total Cost Incurred'
-          value='$105,000'
-          info='Cumulative cost for all fuel purchases'
-          Icon={<Banknote />}
-        /> */}
       </ul>
+      <span className='text-red-500 text-xs'>
+        **All information provided is only for the last 30 days. More/Precise
+        information can be obtained from the "Cost Analysis" page
+      </span>
 
-      <div className='container'>
+      <div className='container mt-5'>
         <DataTable columns={columns} data={trips} />
       </div>
     </main>

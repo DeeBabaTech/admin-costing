@@ -55,7 +55,7 @@ export function DataTable<TData, TValue>({
     <div className='rounded-md border border-hover-primary'>
       <div className='flex justify-between items-center p-3'>
         <h1 className='text-xl font-semibold text-hover-primary'>
-          Trip Details
+          Trip Details (Last 30 days)
         </h1>
         <Input
           placeholder='Filter teams...'

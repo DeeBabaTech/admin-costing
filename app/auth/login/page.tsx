@@ -25,11 +25,14 @@ export default function LoginPage() {
     try {
       setLoading(true);
       const res = await login({ email, password });
-      console.log(res);
       if (res.data.user) {
         toast.success("Login Success");
       } else {
-        toast.error(res.error.message);
+        toast.error(
+          res.error.message === "fetch failed"
+            ? "Network error, please try again."
+            : res.error.message
+        );
         setLoading(false);
       }
     } catch (error) {

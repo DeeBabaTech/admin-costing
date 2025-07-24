@@ -76,7 +76,7 @@ const InputData = () => {
       };
 
       setLoading(true);
-      console.log(body)
+      console.log(body);
       const res = await axios.post("/api/add-trip", body);
 
       if (res.status === 201) {
@@ -251,7 +251,7 @@ const InputData = () => {
 
         <div className='flex justify-end'>
           <Button disabled={loading}>
-            {loading ? "Submitting" : "Submit"}
+            {loading ? "Submitting..." : "Submit"}
           </Button>
         </div>
       </form>

@@ -31,33 +31,12 @@ import {
   PopoverContent,
   PopoverTrigger,
 } from "@/components/ui/popover";
-import { BarChart, getDoughnut, options } from "@/components/charts";
-import { set } from "zod";
-import { tr } from "zod/v4/locales";
+import { getDoughnut, options } from "@/components/charts";
 import axios from "axios";
 import { toast } from "sonner";
 import { Doughnut } from "react-chartjs-2";
-
-const cards = [
-  {
-    id: "1",
-    title: "Total Fuel Cost",
-    value: "20",
-    info: "+8.5% Compared to previous month",
-  },
-  {
-    id: "2",
-    title: "Average Cost/Trip",
-    value: "20",
-    info: "+1.2% Compared to previous month",
-  },
-  {
-    id: "3",
-    title: "Projected Monthly Savings",
-    value: "500",
-    info: "Target Achieved Based on current trtos",
-  },
-];
+import getAnalysis from "./data";
+import { currencyFormat } from "@/components/formats";
 
 export default function Home() {
   const [team, setTeam] = useState("all");
@@ -65,15 +44,17 @@ export default function Home() {
   const [end, setEnd] = useState<Date | undefined>(undefined);
   const [openTo, setOpenTo] = useState(false);
   const [openFrom, setOpenFrom] = useState(false);
+  const [loading, setLoading] = useState(false);
 
   const [trips, setTrips] = useState<any[]>([]);
 
   const handleSubmit = async (e: FormEvent) => {
     e.preventDefault();
     if (!start || !end) {
-      return toast.error("Please select both start and end dates.");
+      return toast.info("Please select both start and end dates.");
     }
     try {
+      setLoading(true);
       const res = await axios.get("/api/fetch-trips", {
         params: {
           start,
@@ -81,16 +62,18 @@ export default function Home() {
           team,
         },
       });
-
-      setTrips(res.data);
+      if (res.data) {
+        setLoading(false);
+        setTrips(res.data);
+      }
     } catch (error) {
       console.log(error);
     }
   };
 
-  console.log("Trips Data:", trips);
+  const { totalTrips, teamsWithTotals, grandTotal } = getAnalysis(trips);
 
-  const doughnutData = getDoughnut(trips);
+  const doughnutData = getDoughnut(teamsWithTotals);
 
   return (
     <main className=''>
@@ -170,32 +153,47 @@ export default function Home() {
             </SelectContent>
           </Select>
         </div>
-        <Button type='submit'>Apply filters</Button>
+        <Button type='submit' disabled={loading}>
+          {loading ? "Applying..." : "Apply filters"}
+        </Button>
       </form>
-      <ul className='flex flex-wrap justify-start mb-5 gap-[0.5%]'>
-        {cards.map((card) => {
-          return (
-            <Overviews
-              key={card.id}
-              title={card.title}
-              value={card.value}
-              info={card.info}
-              Icon={<Users />}
-            />
-          );
-        })}
+      <ul
+        className={`flex ${
+          totalTrips !== 0 ? "items-start" : "items-center"
+        }  mb-5 gap-5 mt-5`}>
+        <div className='flex flex-col gap-3'>
+          <Overviews
+            title='Total Trips Embarked'
+            value={totalTrips}
+            info='Trips embarked by all teams'
+            Icon={<Users />}
+          />
+          <Overviews
+            title='Estimated Total Cost'
+            value={currencyFormat(grandTotal)}
+            info='Estimated cost incurred for the total trips'
+            Icon={<Users />}
+          />
+          <Overviews
+            title='Average Cost/Trip'
+            value={currencyFormat(grandTotal / totalTrips || 0)}
+            info='Average cost incurred for the trips'
+            Icon={<Users />}
+          />
+        </div>
+        <div
+          className={`${
+            totalTrips === 0 && "hidden"
+          } w-3/5 border rounded-md border-hover-primary p-2 mb-6`}>
+          <Doughnut data={doughnutData} options={options} />
+        </div>
+        <div
+          className={`${
+            totalTrips !== 0 && "hidden"
+          } border rounded-md border-hover-primary p-5 mb-6 font-semibold text-2xl text-hover-primary text-center`}>
+          No trip recorded. <br /> Please apply filters to view analysis.
+        </div>
       </ul>
-      {/* <div className='flex justify-between gap-3 items-'> */}
-      <div className='w-1/2 border rounded-md border-hover-primary p-2 mb-6'>
-        <Doughnut data={doughnutData} options={options} />
-      </div>
-      {/* <div className='w-4/5 border rounded-md border-hover-primary p-4 mb-6'>
-          <h2 className='text-xl font-semibold text-hover-primary mb-4'>
-            Fuel Costs by Team
-          </h2>
-          <BarChart />
-        </div> */}
-      {/* </div> */}
     </main>
   );
 }

@@ -8,10 +8,15 @@ import {
   Tooltip,
   Legend,
 } from "chart.js";
-import { Doughnut } from "react-chartjs-2";
-import { Bar } from "react-chartjs-2";
 
-ChartJS.register(ArcElement, Tooltip, Legend);
+ChartJS.register(
+  ArcElement,
+  Tooltip,
+  Legend,
+  CategoryScale,
+  LinearScale,
+  Title
+);
 
 export function getDoughnut(data: any) {
   return {
@@ -19,26 +24,11 @@ export function getDoughnut(data: any) {
     datasets: [
       {
         label: "Total",
-        data: data.map((item: any) => item.trips[0].mileageStart),
-        backgroundColor: [
-          "rgba(255, 206, 86)",
-          "rgba(75, 192, 192)",
-          "rgba(153, 102, 255)",
-          "rgba(255, 159, 64)",
-        ],
+        data: data.map((item: any) => item.totalEstimatedCost),
       },
     ],
   };
 }
-
-ChartJS.register(
-  CategoryScale,
-  LinearScale,
-  BarElement,
-  Title,
-  Tooltip,
-  Legend
-);
 
 export const options = {
   responsive: true,
@@ -48,26 +38,7 @@ export const options = {
     },
     title: {
       display: true,
-      text: "Fuel Cost Analysis",
+      text: "Trip Cost Chart",
     },
   },
 };
-
-const labels = ["January", "February", "March", "April", "May", "June"];
-
-export const bardata = {
-  labels,
-  datasets: [
-    {
-      label: "Teams",
-      data: [12, 19, 3, 5, 2, 12],
-      // data: labels.map(() => faker.datatype.number({ min: 0, max: 1000 })),
-      backgroundColor: "rgba(255, 99, 132, 0.5)",
-      borderRadius: 5,
-    },
-  ],
-};
-
-export function BarChart() {
-  return <Bar options={options} data={bardata} />;
-}
