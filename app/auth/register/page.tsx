@@ -26,7 +26,7 @@ export default function LoginPage() {
     e.preventDefault();
     try {
       setLoading(true);
-      const res = await signup({ email, password });
+      const res = await signup({ email, password, name });
       if (res.error) {
         alert(res.error.message);
         setLoading(false);

@@ -33,7 +33,7 @@ export async function signup({
 }: {
   email: string;
   password: string;
-  name?: string;
+  name: string;
 }) {
   const supabase = await createClient();
 
