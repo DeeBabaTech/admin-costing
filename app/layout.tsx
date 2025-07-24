@@ -20,7 +20,7 @@ const poppins = Poppins({
 });
 
 export const metadata: Metadata = {
-  title: "FirstTrust Mortgage Bank Plc",
+  title: "FirstTrust Admin Costing",
   description: "Admin Costing Dashboard",
 };
 

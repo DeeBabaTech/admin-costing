@@ -1,8 +1,10 @@
-export default async function Home() {
-  // const posts = await prisma.post.findMany({
-  //   include: { author: true },
-  //   orderBy: { id: "desc" },
-  // });
+import getUser from "@/components/hooks/get-user";
+import { redirect } from "next/navigation";
 
-  return <div className='text-9xl'>FirstTrust</div>;
+export default async function Home() {
+  const { user } = await getUser();
+
+  if (user) {
+    redirect("/overview");
+  } else redirect("/auth/login");
 }

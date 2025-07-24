@@ -13,7 +13,7 @@ export async function login({
 }) {
   const supabase = await createClient();
 
-  const { error, data } = await supabase.auth.signInWithPassword({
+  const { error } = await supabase.auth.signInWithPassword({
     email: email,
     password: password,
   });
@@ -37,7 +37,7 @@ export async function signup({
 }) {
   const supabase = await createClient();
 
-  const { error, data } = await supabase.auth.signUp({
+  const { error } = await supabase.auth.signUp({
     email: email,
     password: password,
     options: {

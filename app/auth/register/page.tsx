@@ -33,7 +33,7 @@ export default function LoginPage() {
       }
     } catch (error) {
       console.error("Login error:", error);
-      toast.error("An unexpected error occurred. Please try again");
+      // toast.error("An unexpected error occurred. Please try again");
       setLoading(false);
     }
   };

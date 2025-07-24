@@ -1,7 +1,7 @@
-import useGetUser from "@/components/hooks/get-user";
 import prisma from "@/lib/prisma";
 import { z } from "zod";
 import { NextRequest, NextResponse } from "next/server";
+import getUser from "@/components/hooks/get-user";
 
 // POST /api/add-trip
 
@@ -21,7 +21,7 @@ export const POST = async (req: NextRequest) => {
     const json = await req.json();
     const data = tripSchema.parse(json);
 
-    const { user } = await useGetUser();
+    const { user } = await getUser();
 
     const result = await prisma.trip.create({
       data: {
