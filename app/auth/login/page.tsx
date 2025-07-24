@@ -24,19 +24,15 @@ export default function LoginPage() {
     e.preventDefault();
     try {
       setLoading(true);
-      const res = await login({ email, password });
-      if (res.data.user) {
-        toast.success("Login Success");
-      } else {
-        toast.error(
-          res.error.message === "fetch failed"
-            ? "Network error, please try again."
-            : res.error.message
-        );
+      const result = await login({ email, password });
+
+      if (result?.error) {
+        toast.error(result.error);
         setLoading(false);
       }
     } catch (error) {
       console.error("Login error:", error);
+      toast.error("An unexpected error occurred. Please try again");
       setLoading(false);
     }
   };

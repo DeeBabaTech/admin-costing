@@ -26,17 +26,14 @@ export default function LoginPage() {
     e.preventDefault();
     try {
       setLoading(true);
-      const res = await signup({ email, password, name });
-      if (res.error) {
-        alert(res.error.message);
+      const result = await signup({ email, password, name });
+      if (result?.error) {
+        toast.error(result.error);
         setLoading(false);
-      } else {
-        toast.success("User Registered Successfully", {
-          description: "Check your email for verification",
-        });
       }
     } catch (error) {
       console.error("Login error:", error);
+      toast.error("An unexpected error occurred. Please try again");
       setLoading(false);
     }
   };

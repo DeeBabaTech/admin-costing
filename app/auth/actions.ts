@@ -19,7 +19,7 @@ export async function login({
   });
 
   if (error) {
-    return { error, data };
+    return { error: error.message, success: false };
   }
 
   revalidatePath("/overview", "layout");
@@ -48,7 +48,7 @@ export async function signup({
   });
 
   if (error) {
-    return { error, data };
+    return { error: error.message, success: false };
   }
 
   revalidatePath("/confirm-email", "layout");
@@ -61,7 +61,7 @@ export async function logout() {
   const { error } = await supabase.auth.signOut();
 
   if (error) {
-    redirect("/error");
+    return { error: error.message, success: false };
   }
 
   revalidatePath("/login", "layout");

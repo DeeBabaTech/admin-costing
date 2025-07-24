@@ -25,6 +25,18 @@ export function getDoughnut(data: any) {
       {
         label: "Total",
         data: data.map((item: any) => item.totalEstimatedCost),
+        backgroundColor: [
+          "086788",
+          "07a0c3",
+          "f0c808",
+          "fff1d0",
+          "dd1c1a",
+          "542344",
+          "bfd1e5",
+          "ebf5ee",
+          "d8bfaa",
+          "808080",
+        ],
       },
     ],
   };
